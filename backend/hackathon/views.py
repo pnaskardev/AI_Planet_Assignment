@@ -13,6 +13,8 @@ from .models import Hackathon, Submission
 class HackathonListAPIView(generics.ListAPIView):
     queryset = Hackathon.objects.all()
     serializer_class = HackathonSerializer
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
 
 class HackathonRegistrationAPIView(APIView):
@@ -21,8 +23,6 @@ class HackathonRegistrationAPIView(APIView):
     def post(self, request, hackathon_id):
         hackathon = Hackathon.objects.get(id=hackathon_id)
         user = request.user
-        hackathon.participants.add(user)
-        hackathon.save()
 
         user.hackathons.add(hackathon)
         user.save()

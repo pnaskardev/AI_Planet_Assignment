@@ -20,6 +20,15 @@ class SubmissionSerializer(serializers.ModelSerializer):
         model = Submission
         fields = ['submission','name','user', 'hackathon']
 
+    def validate(self, attrs):
+        hackathon = attrs['hackathon']
+        user = self.context['request'].user
+
+        if not user.hackathons.filter(id=hackathon.id).exists():
+            raise serializers.ValidationError("User is not registered for this hackathon")
+
+        return attrs
+    
     def create(self, validated_data):
         
         hackathon = validated_data.get('hackathon')
@@ -41,6 +50,8 @@ class SubmissionSerializer(serializers.ModelSerializer):
             SubmissionLinkFile.objects.create(**submission, submission=submission_instance)
 
         return submission_instance
+    
+
     
 
 
