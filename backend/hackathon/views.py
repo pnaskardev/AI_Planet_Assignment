@@ -3,9 +3,10 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets
 
-from .serializers import HackathonSerializer
-from .models import Hackathon
+from .serializers import HackathonSerializer, SubmissionSerializer
+from .models import Hackathon, Submission
 
 
 class HackathonListAPIView(generics.ListAPIView):
@@ -26,3 +27,10 @@ class HackathonRegistrationAPIView(APIView):
         user.save()
 
         return Response({'message':'registered successfully'},status=200)
+    
+
+class SubmissionRegistration(viewsets.ModelViewSet):
+    queryset=Submission.objects.all()
+    serializer_class=SubmissionSerializer
+    
+

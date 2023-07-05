@@ -28,15 +28,12 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=255)
+    username = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
     is_staff = models.BooleanField(default=False)
     hackathons = models.ManyToManyField(
         'hackathon.Hackathon', related_name='registered_hackathons')
-    username = None
     objects = CustomUserManager()
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['username']

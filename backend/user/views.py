@@ -14,6 +14,9 @@ from .serializers import UserSerializer
 
 
 class Register(APIView):
+    authentication_classes = []
+    permission_classes = []
+
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
