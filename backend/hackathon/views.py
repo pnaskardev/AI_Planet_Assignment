@@ -17,22 +17,15 @@ class HackathonListAPIView(generics.ListAPIView):
     permission_classes = [AllowAny]
 
 
-class HackathonRegistrationAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, hackathon_id):
-        hackathon = Hackathon.objects.get(id=hackathon_id)
-        user = request.user
-
-        user.hackathons.add(hackathon)
-        user.save()
-
-        return Response({'message': 'registered successfully'}, status=200)
-
-
 class SubmissionViewset(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
+
+    def get(self, request):
+        user = request.user
+        submissions = Submission.objects.filter(user=user)
+        serializer = SubmissionSerializer(submissions, many=True)
+        return Response(serializer.data)
 
     def get_permissions(self):
         if self.request.method in permissions.SAFE_METHODS:
