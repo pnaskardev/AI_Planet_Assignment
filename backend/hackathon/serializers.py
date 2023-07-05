@@ -1,6 +1,6 @@
 
 
-from .models import Hackathon, Submission, SubmissionImageFile
+from .models import Hackathon, Submission, SubmissionImageFile,SubmissionFile,SubmissionLinkFile
 from rest_framework import serializers
 
 
@@ -11,27 +11,36 @@ class HackathonSerializer(serializers.ModelSerializer):
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
-    hackathon = HackathonSerializer()
+    hackathon = serializers.PrimaryKeyRelatedField(
+        queryset=Hackathon.objects.all())
 
-    submission = serializers.JSONField()
+    submission = serializers.JSONField(required=False)
 
     class Meta:
         model = Submission
-        fields = '__all__'
+        fields = ['submission','name','user', 'hackathon']
 
-        def create(self, validated_data):
+    def create(self, validated_data):
+        
+        hackathon = validated_data.get('hackathon')
+        submission = validated_data.pop('submission')
 
-            hackathon = validated_data.pop('hackathon')
-            submission = validated_data.pop('submission')
-            print(hackathon)
-            print(submission)
 
-            if not hackathon:
-                raise serializers.ValidationError("Hackathon is required")
-            type = hackathon.get('submission_type')
-            submission_instance = Submission.objects.create(
-                **validated_data)
-            # if type == 'image':
-            #     SubmissionImageFile.objects.create()
+        if not hackathon:
+            raise serializers.ValidationError("Hackathon is required")
+        
+        type = Hackathon.objects.filter(id=hackathon.id).get().submission_type
+        print(type)
+        submission_instance = Submission.objects.create(
+            **validated_data)
+        if type == 'image':
+            SubmissionImageFile.objects.create(**submission, submission=submission_instance)
+        elif type == 'file':
+            SubmissionFile.objects.create(**submission, submission=submission_instance)
+        else:
+            SubmissionLinkFile.objects.create(**submission, submission=submission_instance)
 
-            return submission_instance
+        return submission_instance
+    
+
+

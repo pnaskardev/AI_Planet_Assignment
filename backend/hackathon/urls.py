@@ -3,11 +3,11 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from . import views
+from .views import SubmissionViewset
 
 router = routers.DefaultRouter()
-router.register(r'submission', viewset=views.SubmissionRegistration)
+router.register(r"submission", SubmissionViewset)
 
 urlpatterns = [
-    path('submit/', include(router.urls)),
+    path('', include(router.urls)),
 ]
