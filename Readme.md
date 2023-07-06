@@ -151,8 +151,15 @@ Start the Server
 
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![image](https://github.com/pnaskardev/Hackathon-Management-Service-Django/assets/71266237/805b1d5b-319f-4fba-b8f6-4690153d928a)
 
+![image](https://github.com/pnaskardev/Hackathon-Management-Service-Django/assets/71266237/202c3052-1779-42c9-8021-e6187b93d3aa)
+
+![image](https://github.com/pnaskardev/Hackathon-Management-Service-Django/assets/71266237/da40d825-82ed-4985-82a4-b3ba82297ffa)
+
+![image](https://github.com/pnaskardev/Hackathon-Management-Service-Django/assets/71266237/7fcc8512-6fb3-49ce-8397-5eb420bba7e5)
+
+![image](https://github.com/pnaskardev/Hackathon-Management-Service-Django/assets/71266237/b1ff8e8b-0d06-4b9f-a361-84c0c004c085)
 
 ## Authors
 
