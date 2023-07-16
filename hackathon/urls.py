@@ -6,9 +6,12 @@ from . import views
 from .views import SubmissionViewset
 
 router = routers.DefaultRouter()
-router.register(r"submission", SubmissionViewset)
+# router.register(r"submission", SubmissionViewset)
 
 urlpatterns = [
-    path('hackathons/', views.HackathonListAPIView.as_view(),name='hackathon-list'),
-    path('', include(router.urls)),
+    path('hackathons/', views.HackathonListAPIView.as_view(), name='hackathon-list'),
+    path('get-submissions/',
+         SubmissionViewset.as_view({'get': 'list'}), name='get-submissions'),
+    path('create-submission/',
+         SubmissionViewset.as_view({'post': 'create'}), name='create-submission'),
 ]

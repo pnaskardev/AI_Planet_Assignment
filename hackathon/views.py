@@ -20,16 +20,14 @@ class HackathonListAPIView(generics.ListAPIView):
 class SubmissionViewset(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
-
-    def get(self, request):
+    def list(self, request):
         user = request.user
         submissions = Submission.objects.filter(user=user)
         serializer = SubmissionSerializer(submissions, many=True)
         return Response(serializer.data)
-
-    def get_permissions(self):
-        if self.request.method in permissions.SAFE_METHODS:
-            return (permissions.AllowAny(),)
-
-        if self.request.method == "POST":
-            return (permissions.AllowAny(),)
+    def create(self, request):
+        serializer = SubmissionSerializer(data=request.data,context={'request': request})
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data)
+        return Response(serializer.errors)

@@ -16,30 +16,14 @@ from .models import User
 from .serializers import UserSerializer
 
 
-# class Register(APIView):
-#     authentication_classes = []
-#     permission_classes = []
 
-#     def post(self, request):
-#         serializer = UserSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         return Response(serializer.data)
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     authentication_classes = []
     permission_classes = []
-
-    # Creates User
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=201, headers=headers)
-    
+    http_method_names=["post"]
     
 
 class HackathonRegistrationAPIView(APIView):
@@ -49,12 +33,12 @@ class HackathonRegistrationAPIView(APIView):
     def post(self, request):
         hackathon_id = request.data['hackathon_id']
         if not hackathon_id:
-            raise ValidationError("Hackathon id is required")
+           return Response({'message': 'hackathon id not provided'}, status=400)
 
         try:
             hackathon = Hackathon.objects.get(id=hackathon_id)
         except Hackathon.DoesNotExist:
-            raise ValidationError("Invalid Hackathon ID")
+            return Response({'message': 'invalid hackathon id'}, status=400)
 
         user = request.user
 
@@ -73,12 +57,6 @@ class ListRegisteredHackathons(APIView):
     def get(self, request):
         user = request.user
         hackathons = user.hackathons.all()
-        hackathon_data = [{
-            'title': hackathon.title,
-            'description': hackathon.description,
-            'submission_type': hackathon.submission_type,
-            'start_datetime': hackathon.start_datetime,
-            'end_datetime': hackathon.end_datetime,
-        } for hackathon in hackathons]
+        hackathon_data = HackathonSerializer(hackathons, many=True).data
         return JsonResponse({'registered_hackathons': hackathon_data})
   
